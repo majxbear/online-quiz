@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>添加单选题</title>
+    <link rel="import" href="layout/basic_layout.html">
+</head>
+<body>
+    <div id="wrapper">
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element"> <span>
+                            <img alt="image" class="img-circle" src="style/img/profile_small.jpg" />
+                             </span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                                <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">Beaut-zihan</strong>
+                             </span> <span class="text-muted text-xs block">超级管理员 <b class="caret"></b></span> </span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+
+
+                                <li class="logout" style="cursor: pointer">安全退出</li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="active">
+                        <a href="quiz_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">测试管理</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="quiz_list.html">测试管理</a></li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="question_list.html"><i class="fa fa fa-globe"></i> <span class="nav-label">题目管理</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="question_list.html">题目管理</a> </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="user_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">系统管理</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="user_list.html">用户管理</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <div class="form-group">
+                            <h1>添加单选题</h1>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="row wrapper white-bg page-heading"></div>
+            <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="row">
+                    <div class="col-lg-12">
+                    	<form id="questionForm" method="post" action="" class="form-horizontal" >
+                            <input type="hidden" name="courseId" value="${courseId}"/>
+                            <input type="hidden" name="questionTypeId" value="${questionTypeId}"/>
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>概要信息</h5>
+                                </div>
+                                <div class="ibox-content">
+                                        <div class="form-group has-error">
+                                            <label class="col-sm-2 control-label">题目名称</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" name="name">
+                                                <span class="help-block m-b-none">不能为空</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">关键词</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" name="keywords"><span class="help-block m-b-none">多个关键词用英文分号分隔</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group has-error">
+                                            <label class="col-sm-2 control-label">题干</label>
+                                            <div class="col-sm-10">
+                                                <textarea rows="4" cols="70" name="questionText"></textarea>
+                                                <span class="help-block m-b-none">不能为空</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group has-error">
+                                            <label class="col-sm-2 control-label">默认分数</label>
+                                            <div class="col-sm-2">
+                                                <input type="text" class="form-control" name="defaultMark" value="1">
+                                                <span class="help-block m-b-none">不能为空</span>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+
+                            <div class="ibox float-e-margins">
+                                <input type="hidden" id="answerInput" name="answerEntity" value=""/>
+                                <div class="ibox-title">
+                                    <h5>答案</h5>
+                                </div>
+                                <div class="ibox-content answer" >
+                                        <div class="form-group answer-block">
+                                            <div class="row single">
+                                                <label class="col-sm-2 control-label">选项1</label>
+                                                <div class="col-sm-10">
+                                                    <textarea rows="4" cols="70" name="answerText"></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="row single">
+                                                <label class="col-sm-2 control-label">是否正确答案</label>
+                                                <div class="col-sm-2">
+                                                    <select name="rightAnswer" class="form-control">
+                                                        <option value="0">是</option>
+                                                        <option value="1">否</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="row single">
+                                                <label class="col-sm-2 control-label">反馈</label>
+                                                <div class="col-sm-10">
+                                                    <textarea rows="4" cols="70" name="specialFeedback"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <div class="center">
+                                        <button class="btn" type="button" id="addAnswer" onclick="addAnswerBlock()">添加一个新选项</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>多次尝试和提示</h5>
+                                </div>
+                                <div class="ibox-content">
+                                    <input id="hitInput" type="hidden" name="hitEntity" value=""/>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">允许尝试次数</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" name="attemptsAllowed" value="1">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">每次尝试错误罚分(百分比)</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" name="attemptPenalty" value="10">
+                                            <span class="help-block m-b-none">无需输入%</span>
+                                        </div>
+                                    </div>
+                                    <div class="hit">
+                                            <div class="form-group hitBlock">
+                                                <label class="col-sm-2 control-label">提示1</label>
+
+                                                <div class="col-sm-10">
+                                                    <textarea rows="4" cols="70" name="hit"></textarea>
+                                                </div>
+                                            </div>
+                                        <div class="center">
+                                            <button class="btn" type="button" id="addHit" onclick="addHitBlock()">添加一个提示</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>题目反馈 </h5>
+                                </div>
+                                <div class="ibox-content">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">题目反馈</label>
+
+                                        <div class="col-sm-10">
+                                            <textarea rows="4" cols="70" name="generalFeedback"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12 center">
+                                    <button class="btn btn-success" type="button" onclick="onInfo()">保存</button>
+                                    <button class="btn btn-white" type="button" onclick="window.location.href='question_list.html'">取消</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function addAnswerBlock(){
+        var b = $(".answer").find(".answer-block");
+
+        var $htmlAnswerBlock="<div class='form-group answer-block'>"+
+            "<div class='row single'>"+
+                "<label class='col-sm-2 control-label'>选项"+(b.length+1)+"</label>"+
+                "<div class='col-sm-10'>"+
+                "<textarea rows='4' cols='70' name='answerText'></textarea>"+
+                "</div>"+
+            "</div>"+
+            "<div class='row single'>"+
+                "<label class='col-sm-2 control-label'>是否正确答案</label>"+
+                "<div class='col-sm-2'>"+
+                    "<select name='rightAnswer' class='form-control'>"+
+                        "<option value='0'>是</option>" +
+                        "<option value='1'>否</option>"+
+                    "</select>"+
+                "</div>"+
+            "</div>"+
+            "<div class='row single'>"+
+                "<label class='col-sm-2 control-label'>反馈</label>"+
+                "<div class='col-sm-10'>" +
+                    "<textarea rows='4' cols='70' name='specialFeedback'></textarea>"+
+                "</div>"+
+            "</div>"+
+            "</div>'";
+        b.parent(".answer").find(".center").before($htmlAnswerBlock);
+    }
+
+    function addHitBlock(){
+        var b = $(".hit").find(".hitBlock");
+
+        var $htmlHitBlock="<div class='form-group hitBlock'>"+
+                "<label class='col-sm-2 control-label'>提示"+(b.length+1)+"</label>"+
+                "<div class='col-sm-10'>"+
+                    "<textarea rows='4' cols='70' name='hit'></textarea>"+
+                "</div>"+
+                "</div>";
+
+        b.parent(".hit").find(".center").before($htmlHitBlock);
+    }
+
+    function onInfo(){
+        var questionName = $("input[name='name']").val(),
+            keywords = $("input[name='keywords']").val(),
+            questionText =$("textarea[name='questionText']").val(),
+            questionMark =$("input[name='defaultMark']").val(),
+            attemptsAllowed =$("input[name='attemptsAllowed']").val(),
+            attemptPenalty =$("input[name='attemptPenalty']").val(),
+            generalFeedback = $("textarea[name='generalFeedback']").val();
+        if(questionName==""){
+            alert("题目名称不能为空");
+            questionName.focus();
+            return;
+        }
+        if(questionText==""){
+            alert("题干不能为空");
+            questionText.next().focus();
+            return;
+        }
+        if(questionMark==""){
+            alert("默认分数不能为空");
+            questionMark.focus();
+            return;
+        }
+        var oAnswer =[],oHit =[];
+        var b = $(".answer").find(".answer-block");
+        $.each(b, function(index) {
+            var answerText = $(this).find("textarea[name='answerText']").val();
+            var rightAnswer =  $(this).find("select[name='rightAnswer']").val();
+            var specialFeedback = $(this).find("textarea[name='specialFeedback']").val();
+            var temp;
+            temp = {"answerText":answerText,
+                "rightAnswer":rightAnswer,
+                "specialFeedback":specialFeedback,"order":index};
+            oAnswer.push(temp);
+        });
+
+        var c = $(".hit").find("textarea[name='hit']");
+        $.each(c, function(index) {
+            var hit = $(this).val();
+
+            var temp;
+            temp = {"hit":hit,"order":index};
+            oHit.push(temp);
+        });
+
+        var oSo = $(".answer .answer-block select");
+        var oSo_l = 0;
+        oSo.each(function(){
+            if($(this).val()==0){
+                oSo_l++;
+            }
+        });
+        if(oSo_l>1){
+            layer.alert("单项选择题只能有一个正确选项",{icon:5});
+            return;
+        }
+
+        var question = {
+            "name": questionName, "keywords": keywords,
+            "questionType": 1, "questionText": questionText,
+            "defaltMark": questionMark, "attemptsAllowed": attemptsAllowed,
+            "attemptPenalty": attemptPenalty,
+            "answers": oAnswer, "hints": oHit,
+            "generalFeedback": generalFeedback
+        };
+        console.log(JSON.stringify(question));
+        $.ajax({
+            url: "/service/question",
+            method: "put",
+            dataType: "json",
+            data:JSON.stringify(question),
+            headers: {
+                "username": getCookie("username"),
+                "token": getCookie("token"),
+                "type": getCookie("type")
+            },
+            success: function (data) {
+                layer.load("添加成功", 2);
+                window.location.href = "question_list.html";
+            },
+            error: function (data) {
+                if (data.status == 403) {
+                    layer.alert("认证失败，请重新登录！",{icon:5});
+                    window.location.href = "index.html";
+                }
+            }
+        });
+    }
+
+    $(function(){
+        $(".answer .answer-block select").val(1);
+        $(".answer .answer-block select").eq(0).val(0);
+    })
+</script>
+
+</body>

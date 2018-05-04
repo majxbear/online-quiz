@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>考试计划</title>
+    <link rel="import" href="layout/basic_layout.html">
+    <style>
+        .custom-page-wrapper {margin: 0 !important;}
+    </style>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper" class="custom-page-wrapper gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <span class="m-r-sm text-muted welcome-message"><i class="fa fa-home"></i>欢迎使用在线测试系统</span>
+                    </li>
+                    <li>
+                        <a href="quiz_expected_list.html"><i class="fa fa-list-ol"></i> 考试计划</a>
+                    </li>
+                    <li>
+                        <a href="quiz_attempts_list.html"><i class="fa fa-bar-chart"></i> 考试记录</a>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                            <i class="fa fa-envelope"></i> <span class="label label-warning">16</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-messages">
+                            <li>
+                                <div class="dropdown-messages-box">
+                                    <a href="#" class="pull-left">
+                                        <img alt="image" class="img-circle" src="style/img/a7.jpg">
+                                    </a>
+                                    <div class="media-body">
+                                        <small class="pull-right">46小时前</small>
+                                        <strong>小四</strong> 项目已处理完结
+                                        <br>
+                                        <small class="text-muted">3天前 2014.11.8</small>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="dropdown-messages-box">
+                                    <a href="#" class="pull-left">
+                                        <img alt="image" class="img-circle" src="style/img/a4.jpg">
+                                    </a>
+                                    <div class="media-body ">
+                                        <small class="pull-right text-navy">25小时前</small>
+                                        这是一条测试信息
+                                        <br>
+                                        <small class="text-muted">昨天</small>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="text-center link-block">
+                                    <a href="#">
+                                        <i class="fa fa-envelope"></i> <strong> 查看所有消息</strong>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="logout">
+                        <a href="#"><i class="fa fa-sign-out"></i> 退出</a>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div class="col-lg-12 center question-manage-alert" style="display: none">
+                            <span>目前还没有我参加的测试</span>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>标题 </th>
+                                        <th>考试方式 </th>
+                                        <th>允许作答次数</th>
+                                        <th>允许作答时间</th>
+                                        <th>开放时间</th>
+                                        <th>关闭时间</th>
+                                        <th>开始答题</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function getExamType(type) {
+        switch (type) {
+            case 0:
+                return "即时小测";
+            case 1:
+                return "正式考试";
+            default:
+                return "未知类型";
+        }
+    }
+
+    function getAllowed(allowed) {
+        if(allowed==-1)
+            return "无限制";
+        return   allowed.toString();
+    }
+
+    $(function () {
+        $.ajax({
+            url: "/service/attempt/expected",
+            method: "get",
+            dataType: "json",
+            headers: {
+                "username": getCookie("username"),
+                "token": getCookie("token"),
+                "type": getCookie("type")
+            },
+            success: function (data) {
+                if(data.length<1){
+                    $(".question-manage-alert").show();
+                    $("table").parents(".ibox-content").hide();
+                    return;
+                }
+                for (var i = 0; i < data.length; i++) {
+                    var link =  '<td><a href="quiz_attempt_start.html?id=' + data[i].id + '" target="_blank"><img src="style/img/enter.png"/></a></td>' ;;
+                    if(data[i].quiz.examType==1)
+                        link= '<td><a href="exam_attempt_start.html?id=' + data[i].id + '" target="_blank"><img src="style/img/enter.png"/></a></td>' ;
+
+                    var blockHtml =
+                        '<tr data-attributes="' + data[i].id + '">' +
+                        '<td>' + data[i].quiz.name + '</td>' +
+                        '<td>' + getExamType(data[i].quiz.examType) + '</td>' +
+                        '<td>' + getAllowed(data[i].attemptsAllowed) + '</td>' +
+                        '<td>' + getAllowed(data[i].minutesAllowed) + '</td>' +
+                        '<td>' + date("Y-m-d H:i:s",data[i].timeOpen) + '</td>' +
+                        '<td>' + date("Y-m-d H:i:s",data[i].timeClose) + '</td>' +
+                        link;
+                    $("tbody").append(blockHtml);
+                }
+            },
+            error: function (data) {
+                if (data.status == 403) {
+                    layer.alert("认证失败，请重新登录！", {icon: 5});
+                    window.location.href = "index.html";
+                }
+            }
+        });
+    })
+
+</script>
+
+</body>
+</html>

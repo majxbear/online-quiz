@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="cn.kgc.quiz.domain.UserLogin" table="USER_LOGIN">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="20" scale="0"/>
+            <generator class="sequence">
+                <param name="sequence">SEQ_SYS_USER</param>
+            </generator>
+        </id>
+        <property name="username" type="java.lang.String">
+            <column name="USERNAME" precision="100" scale="0"/>
+        </property>
+        <property name="token" type="java.lang.String">
+            <column name="TOKEN" precision="100" scale="0"/>
+        </property>
+        <property name="loginTime" type="java.util.Date">
+            <column name="LOGIN_TIME"/>
+        </property>
+    </class>
+</hibernate-mapping>

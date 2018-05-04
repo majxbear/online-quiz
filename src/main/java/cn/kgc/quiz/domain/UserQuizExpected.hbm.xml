@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="cn.kgc.quiz.domain.UserQuizExpected" table="Q_USER_EXPECTED_QUIZ">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="20" scale="0"/>
+            <generator class="sequence">
+                <param name="sequence">SEQ_Q_USER_EXPECTED_QUIZ</param>
+            </generator>
+        </id>
+        <property name="quizId" type="java.lang.Long">
+            <column name="QUIZ_ID" precision="20" scale="0"/>
+        </property>
+        <many-to-one name="quiz" class="cn.kgc.quiz.domain.Quiz" insert="false"
+                     update="false" lazy="false">
+            <column name="QUIZ_ID" precision="20" scale="0"/>
+        </many-to-one>
+        <property name="quizUserId" type="java.lang.Long">
+            <column name="USERID" precision="20" scale="0"/>
+        </property>
+        <many-to-one name="sysUser" class="cn.kgc.quiz.domain.QuizUser" insert="false"
+                     update="false" lazy="false">
+            <column name="USERID" precision="20" scale="0"/>
+        </many-to-one>
+        <property name="timeOpen" type="java.util.Date">
+            <column name="TIMEOPEN"/>
+        </property>
+        <property name="timeClose" type="java.util.Date">
+            <column name="TIMECLOSE"/>
+        </property>
+        <property name="attemptsAllowed" type="java.lang.Integer">
+            <column name="ATTEMPTS_ALLOWED"/>
+        </property>
+        <property name="minutesAllowed" type="java.lang.Integer">
+            <column name="MINUTES_ALLOWED"/>
+        </property>
+        <property name="currentFeedbackType" type="java.lang.Integer">
+            <column name="CURRENT_FEEDBACK_TYPE"/>
+        </property>
+        <property name="examType" type="java.lang.Integer">
+            <column name="EXAM_TYPE"/>
+        </property>
+    </class>
+</hibernate-mapping>

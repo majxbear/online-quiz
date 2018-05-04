@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试管理</title>
+    <link rel="import" href="layout/basic_layout.html">
+    <script src="style/js/jquery.base64.js"></script>
+    <script src="style/js/tableExport.js"></script>
+    <script src="style/js/highcharts.js"></script>
+</head>
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element"> <span>
+                            <img alt="image" class="img-circle" src="style/img/profile_small.jpg" />
+                             </span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                                <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">Beaut-zihan</strong>
+                             </span> <span class="text-muted text-xs block">超级管理员 <b class="caret"></b></span> </span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li class="logout" style="cursor: pointer">安全退出</li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="active">
+                    <a href="quiz_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">测试管理</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="quiz_list.html">测试管理</a></li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="question_list.html"><i class="fa fa fa-globe"></i> <span class="nav-label">题目管理</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="question_list.html">题目管理</a> </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="user_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">系统管理</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="user_list.html">用户管理</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+
+        <div class="row wrapper white-bg page-heading"></div>
+        <div class="quiz-name">${quiz.name}</div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5><strong>参与情况统计 </strong></h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div id="finish-container" style="width: 400px; height: 300px; margin: 0 auto;"></div>
+                            </div>
+                            <div class="center">
+                                <button style="margin-top:10px" class="btn btn-white" type="button" onclick="listStudents(${quiz.id})" data-toggle="modal" data-target="#stu-table">查看未参与学生</button>
+                            </div>
+                        </div>
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5><strong>成绩分布</strong></h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div id="score-container" style="width: 800px; height: 400px; margin: 0 auto;"></div>
+                            </div>
+
+                        </div>
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5><strong>题目错误率</strong></h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>题目序号</th>
+                                            <th>题目名称</th>
+                                            <th>作答次数</th>
+                                            <th>做错次数</th>
+                                            <th>题目错误率</th>
+                                            <th>详细查看</th>
+                                            <th>思想汇集 </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>${index.count}</td>
+                                                <td style="width:100px"><a href="questionPreview.do?id=${display.id}" target="_blank">${display.name}</a></td>
+                                                <td>${display.answeredNum}</td>
+                                                <td>${display.wrongNum}</td>
+                                                <td>${display.wrongRate}</td>
+                                                <td><a onclick="draw_chart(this)" data-attributes="questionResultSta.do?questionId=${display.id}&quizId=${quiz.id}" data-toggle="modal" data-target="#sta-chart"><img src="style/img/chart.png"/></a></td>
+                                                <td><a onclick="idea_display(this)" question-id='${display.id}' data-attributes="getQuestionIdea.do?questionId=${display.id}&quizId=${quiz.id}" data-toggle="modal" data-target="#idea-table"><img src="style/img/idea.png"/></a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function listStudents(quizId){
+        $.ajax({
+            type: 'get',
+            dataType:'json',
+            url: 'getQuizUnfinishedStu.do?quizId='+quizId,
+            success:function(data){
+                $("#stu-body").html("");
+                var email = "";
+                $.each(data, function(i,item){
+                    email = item.email;
+                    if(typeof(email)=="undefined")
+                        email = "";
+                    $("#stu-body").append("<tr><td>"+item.username+"</td>" +
+                            "<td>"+item.realName+"</td>" +
+                            "<td>"+email+"</td>" +
+                            "<td><a><img src='<c:url value='style/img/notice.png'/> '/></a></td></tr>");
+                });
+            },
+            error:function(){
+                layer.msg("数据链接失败，请稍后再试",5);
+            }
+        })
+    }
+    function updateAttemptId(questionId,questionAttemptId){
+        $("input[name='questionAttemptId']").attr("value",questionAttemptId);
+        $("input[name='questionId']").attr("value",questionId);
+        $.ajax({
+            type: 'get',
+            dataType:'html',
+            url: 'getTeacherRemark.do?questionAttemptId='+questionAttemptId,
+            success:function(data){
+                var a= eval('('+data+')');
+                var qGrade ="<span class='grade'>"+(a.grade).toFixed(2)+"分</span>",qResult = "";
+                if(a.resultFlag==0){
+                    qResult = "<span class='fa fa fa-check completely-right'></span>";
+                }else if(a.resultFlag ==2){
+                    qResult = "<span class='fa fa fa-close wrong'></span>";
+                }
+
+                var contentFob = "",editorPath="${pageContext.request.contextPath}/common/ckeditor/";
+                 contentFob += '<div class="slider-container" >' +
+                        '<div class="question-body">' +
+                        '<div class="question-header row">' +
+                        '<div class="col-md-12">' +
+                        '<span class="question-type">'+a.qTypeName+'<label class="q-point">('+a.defaultMark+'分)</label></span>'+qGrade+qResult+
+                        '</div>'+
+                        '<div class="col-md-12">';
+                contentFob += '<div class="question-title">'+format_path(a.questionText,editorPath) +'</div>'+
+                        '</div>' +
+                        '<ul class="answers">';
+                for (var j = 0; j < a.answers.length; j++) {
+                    contentFob += '<li><label>';
+                    if(a.qTypeShortName=='sc'){
+                        if(a.answers[j].selected==0)
+                            contentFob +='<input type="radio" checked="true">';
+                        else
+                            contentFob +='<input type="radio">';
+                    }
+                    else if(a.qTypeShortName=='mc'){
+                        if(a.answers[j].selected==0)
+                            contentFob +='<input type="checkbox" checked="checked">';
+                        else
+                            contentFob +='<input type="checkbox">';
+                    }
+                    contentFob +=html_decode(format_path(back_quot(a.answers[j].answer),editorPath)) ;
+                }
+                var userIdea ="";
+                if(typeof(a.userIdea)!="undefined") userIdea = a.userIdea;
+                contentFob +='<div class="cbm row"><span class="col-md-12">我的解题思路、想和老师交流的问题等</span>'+
+                        '<div class="col-md-12"><textarea rows="2" cols="70" name="userIdea" class="form-control">'+userIdea+'</textarea></div> </div>';
+
+                $("#question-display").html(contentFob);
+                $("select[name='award_rate']").val(a.awardRate);
+                $("textarea[name='teacher_feedback']").val(a.teacherFeedback);
+            },
+            error:function(){
+                layer.msg("数据链接失败，请稍后再试",5);
+            }
+        })
+    }
+    function submitRemark(){
+        var questionAttemptId =$("input[name='questionAttemptId']").val(),
+                questionId=$("input[name='questionId']").val(),
+                award_rate=$("select[name='award_rate']").val(),
+                teacher_feedback=encodeURI($("textarea[name='teacher_feedback']").val());
+        $.ajax({
+            type: 'get',
+            dataType:'html',
+            data:{"questionAttemptId":questionAttemptId,"questionId":questionId,"award_rate":award_rate,"teacher_feedback":teacher_feedback},
+            url: 'teacherRemark.do',
+            success:function(data){
+                if(data=='ok'){
+                    layer.load("<spring:message code='alert.reply'/>", 1);
+                    $("#idea-status-" + questionAttemptId).html("<img src='style/img/yes.png'/>");
+                    $("#teacher-feedback").modal('hide');
+                }
+            },
+            error:function(){
+                layer.load("数据链接失败，请稍后再试", 1);
+            }
+        })
+    }
+    function idea_display(obj){
+        var url = $(obj).attr("data-attributes"),questionId=$(obj).attr("question-id");
+        $.ajax({
+            type: 'get',
+            dataType:'json',
+            url: url,
+            success:function(data){
+                $("#idea-body").html("");
+                var idea,status;
+                $.each(data, function(i,item){
+                    status="",idea=item.idea;
+                    if(typeof(idea)=="undefined" || idea=="undefined" || idea=="")
+                        return true;
+                    if(item.replyStatus==1)
+                        status="<img src='style/img/yes.png'/> ";
+                    $("#idea-body").append("<tr><td>"+item.username+"</td>" +
+                            "<td>"+item.realName+"</td>" +
+                            "<td>"+idea+"</td>" +
+                            "<td id='idea-status-"+item.id+"'>"+status+"</td>"+
+                            "<td><a onclick='updateAttemptId("+questionId+","+item.id+")' data-toggle='modal' data-target='#teacher-feedback'><img src='<c:url value='style/img/reply.png'/> '/></a></td></tr>");
+                });
+            },
+            error:function(){
+                layer.msg("数据链接失败，请稍后再试",5);
+            }
+        })
+    }
+    function draw_chart(obj){
+        var url = $(obj).attr("data-attributes");
+        var chart = $('#container').highcharts();
+        $.ajax({
+            type: 'get',
+            dataType:'json',
+            url: url,
+            success:function(data){
+                data = eval(data);
+                chart.setTitle({text:''+data.title});
+                chart.series[0].setData(data.answeredNum);
+                chart.xAxis[0].setCategories(data.categories);
+                chart.xAxis[0].update({labels:{overflow:'justify',
+                    formatter: function () {
+                        if(this.value.length<10)
+                            return this.value;
+                        else return (this.value).toString().substring(0,9)+'...';
+                    }}});
+            },
+            error:function(){
+                layer.msg("数据链接失败，请稍后再试",5);
+            }
+        })
+    }
+    $(function () {
+        var options={
+            title: {text: ''},
+            xAxis: {categories: []},
+            yAxis: {allowDecimals:false,min: 0,title: {text: ''}},
+            series: [{type: 'column',name:'',data:[]}],
+            credits:{enabled:false},
+            legend:{enabled:false},
+            plotOptions:{column:{colorByPoint:true},series: {dataLabels:{enabled:true,
+                formatter:function () {
+                    if(this.y!=0)
+                        return this.y+'人';
+                    else return '';
+                }}}},
+            tooltip:{pointFormat:'<span style="color:{series.color}"></span> <b>{point.y}</b><br/>'}
+        },scoreContainer = $('#score-container'),finishContainer=$('#finish-container');
+        finishContainer.highcharts({
+            chart: {type: 'pie'},
+            credits:{enabled:false},
+            tooltip:{enabled:false},
+            title: {text: html_decode('${quiz.name}')+''},
+            plotOptions: {pie:{allowPointSelect: true,cursor: 'pointer',
+                dataLabels: {enabled: true,format: '<b>{point.name}</b>: {point.y} 人'}}
+            },
+            series: [{
+                colorByPoint: true,
+                data: [{name: '已参与',y: ${finishedNum}}, {name: '未参与',y: ${unfinishedNum},sliced: true,selected: true}]
+            }]
+        });
+
+        scoreContainer.highcharts(options);
+        var scoreChart = scoreContainer.highcharts();
+        scoreChart.setTitle({text:html_decode('${quiz.name}')+''});
+        scoreChart.series[0].setData(${partData});
+        scoreChart.xAxis[0].setCategories(['0-20%','20-40%','40-60%','60-80%','80-100%']);
+
+        $('#container').highcharts(options);
+
+        $("select[name='remark_temple']").change(function(){
+            $("textarea[name='teacher_feedback']").val($(this).find('option:selected').text());
+        });
+    })
+
+
+</script>
+<div class="modal inmodal" id="stu-table" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog choose-questions">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">关闭</span>
+                </button>
+                <h4 class="modal-title">未参与学生 </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>学号 </th>
+                                            <th>姓名</th>
+                                            <th>邮箱</th>
+                                            <th>提醒</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="stu-body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" style="width: 900px; height: 700px; margin: 0 auto" id="sta-chart" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content animated bounceInRight">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only"></span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="container" style="width: 800px; height: 600px; margin: 0 auto;"></div>
+        </div>
+    </div>
+</div>
+<div class="modal inmodal" style="width: 1200px; height: 800px; margin: 0 auto" id="idea-table" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1200px; height: 700px;">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">关闭</span>
+                </button>
+                <h4 class="modal-title">思想汇集 </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div  class="table-responsive">
+                                    <table style="table-layout:fixed;" class="idea-td table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th style="width:100px">学号 </th>
+                                            <th style="width:150px">姓名</th>
+                                            <th>思想汇集</th>
+                                            <th style="width:100px">回复状态</th>
+                                            <th style="width:50px">回复</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="idea-body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal inmodal" style="width: 1200px; height: 800px; margin: 0 auto" id="teacher-feedback" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px; height: 700px;">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                </button>
+                <h4 class="modal-title">教师评分和评论 </h4>
+            </div>
+            <div class="modal-body">
+                <input name="questionAttemptId" type="hidden" value="0"/>
+                <input name="questionId" type="hidden" value="0"/>
+                <div class="form-group" id="question-display"></div>
+                <div class="form-group award">
+                    <label>加分比例</label>
+                    <select name="award_rate">
+                        <option value="0">不予加分</option>
+                        <option value="0.1">10%</option>
+                        <option value="0.2">20%</option>
+                        <option value="0.3">30%</option>
+                        <option value="0.4">40%</option>
+                        <option value="0.5">50%</option>
+                        <option value="0.6">60%</option>
+                        <option value="0.7">70%</option>
+                        <option value="0.8">80%</option>
+                        <option value="0.9">90%</option>
+                        <option value="1">100%</option>
+                    </select>
+                </div>
+                <div class="form-group award">
+                    <div>
+                        <label>快速回复</label>
+                        <select name="remark_temple">
+                            <option>分析正确，掌握了相关知识。 </option>
+                            <option>分析正确，但关键步骤把握不准确。 </option>
+                            <option>你的解答思路正确，继续加油。 </option>
+                            <option>你的解答思路有创新，值得肯定。</option>
+                            <option>解答思路错了，请多看看试题的反馈信息，加以巩固。</option>
+                            <option>问题的解答要抓住关键，分析问题要有理有据。</option>
+                            <option>本题考查的是基础概念，复习相关知识点。 </option>
+                        </select>
+                    </div>
+                    <textarea name="teacher_feedback" cols="70" rows="2"  class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="submitRemark()" class="btn btn-success">回复</button>
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>

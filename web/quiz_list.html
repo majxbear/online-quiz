@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试管理</title>
+    <link rel="import" href="layout/basic_layout.html">
+</head>
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element"> <span>
+                            <img alt="image" class="img-circle" src="style/img/profile_small.jpg"/>
+                             </span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                                <span class="clear"> <span class="block m-t-xs"> <strong
+                                        class="font-bold">Beaut-zihan</strong>
+                             </span> <span class="text-muted text-xs block">超级管理员 <b class="caret"></b></span> </span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li class="logout" style="cursor: pointer">安全退出</li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="active">
+                    <a href="quiz_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">测试管理</span> <span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="quiz_list.html">测试管理</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="question_list.html"><i class="fa fa fa-globe"></i> <span class="nav-label">题目管理</span><span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="question_list.html">题目管理</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="user_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">系统管理</span> <span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="user_list.html">用户管理</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row wrapper white-bg page-heading"></div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <form action="#" method="post">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="请输入测试名称" class="input-sm form-control"
+                                                   name="name">
+                                            <span class="input-group-btn">
+                                                <input type="submit" class="btn btn-sm btn-success" value="搜索">
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="i-checks" id="allChk"></th>
+                                        <th>标题</th>
+                                        <th>考试方式
+                                            <span class="help" title="点我获取帮助"  data-toggle="modal"  data-target="#help-exam-type">
+                                                <img  src="style/img/help.svg"/>
+                                            </span>
+                                        </th>
+                                        <th>反馈方式
+                                            <span class="help" title="点我获取帮助" data-toggle="modal" data-target="#help-feedback-mode">
+                                                <img src="style/img/help.svg"/>
+                                            </span>
+                                        </th>
+                                        <th>预览</th>
+                                        <th>管理题目</th>
+                                        <th>修改</th>
+                                        <th>删除</th>
+                                        <th>发布</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <div class="center">
+                                    <button class="btn btn-success" type="button"
+                                            onclick="window.location.href='quiz_add.html'">添加一个测试
+                                    </button>
+                                    <button class="btn btn-success" id="batchDelete" type="button" onclick="">删除
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function getExamType(type) {
+        switch (type) {
+            case 0:
+                return "即时小测";
+            case 1:
+                return "正式考试";
+            default:
+                return "未知类型";
+        }
+    }
+
+    function getFeedbackType(type) {
+        switch (type) {
+            case 0:
+                return "自由模式";
+            case 1:
+                return "交互尝试模式";
+            case 2:
+                return "CBM模式";
+            case 3:
+                return "IDEA模式";
+            default:
+                return "未知类型";
+        }
+    }
+
+    $(function () {
+        $.ajax({
+            url: "/service/quiz",
+            method: "get",
+            dataType: "json",
+            headers: {
+                "username": getCookie("username"),
+                "token": getCookie("token"),
+                "type": getCookie("type")
+            },
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var previewLink = '<td><a href="quiz_preview.html?id=' + data[i].id + '" target="_blank"><img src="style/img/preview.png"/></a></td>' ;
+                    if(data[i].examType==1)
+                        previewLink = '<td><a href="exam_preview.html?id=' + data[i].id + '" target="_blank"><img src="style/img/preview.png"/></a></td>' ;
+                    var answerHtml =
+                        '<tr data-attributes="' + data[i].id + '">' +
+                        '<td><input type="checkbox" class="i-checks" name="input[]"></td>' +
+                        '<td>' + data[i].name + '</td>' +
+                        '<td>' + getExamType(data[i].examType) + '</td>' +
+                        '<td>' + getFeedbackType(data[i].feedbackType) + '</td>' +
+                            previewLink+
+                        '<td style="cursor: pointer"><a href="quiz_chosen_questions.html?id=' + data[i].id + '""><img src="style/img/directory.png"/></a></td>' +
+                        '<td style="cursor: pointer"><a href="quiz_modify.html?id=' + data[i].id + '"><img src="style/img/modify.png "/></a></td>' +
+                        '<td style="cursor: pointer" onclick="delete_obj(' + data[i].id + ')"><img src="style/img/remove.png "/></td>' +
+                        '<td><a href= "' + data[i].id +'quiz_publish.html?id=""><img src="style/img/user.png "/></a></td>' ;
+                    $("tbody").append(answerHtml);
+                }
+            },
+            error: function (data) {
+                if (data.status == 403) {
+                    layer.alert("认证失败，请重新登录！", {icon: 5});
+                    window.location.href = "index.html";
+                }
+            }
+        });
+    })
+
+    $("#allChk").click(function () {
+        $("input[name='input[]']").prop("checked", this.checked);
+    });
+    var subChk = $("input[name='input[]']");
+    subChk.click(function () {
+        $("#allChk").prop("checked", subChk.length == subChk.filter(":checked").length ? true : false);
+    });
+
+    function delete_obj(id) {
+        if (confirm("您确定删除吗？ ")) {
+            $.ajax({
+                url: "/service/quiz/" + id,
+                method: "delete",
+                dataType: "json",
+                headers: {
+                    "username": getCookie("username"),
+                    "token": getCookie("token"),
+                    "type": getCookie("type")
+                },
+                success: function (data) {
+                    layer.alert("删除成功", {icon: 2});
+                    window.location.href = "quiz_list.html";
+                },
+                error: function (data) {
+                    if (data.status == 403) {
+                        layer.alert("认证失败，请重新登录！", {icon: 5});
+                        window.location.href = "index.html";
+                    } else if (data.status == 404) {
+                        layer.alert("用户不存在！", {icon: 5});
+                        window.location.href = "quiz_list.html";
+                    }
+                }
+            });
+        }
+    }
+
+    $("#batchDelete").click(function () {
+        var checked = $("input[name='input[]']:checked");
+        var checkedNum = checked.length;
+        if (checkedNum == 0) {
+            layer.alert("请选择至少一项！", {icon: 5});
+            return;
+        }
+        var ids = "";
+        checked.each(function () {
+            ids += ($(this).parents("tr").attr("data-attributes")) + ",";
+        });
+        delete_obj(ids);
+    });
+</script>
+
+
+<div class="modal inmodal" id="help-feedback-mode" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only"></span>
+                </button>
+                <h4 class="modal-title">反馈模式</h4>
+            </div>
+            <div class="modal-body">
+                <p><strong>自由模式</strong>无条件的反馈方式，学生作答完题目后还可以无限次地重新作答该题目。</p>
+                <p><strong>交互尝试模式</strong>有条件的反馈方式，学生作答完题目后还可以有限次地重新作答该题目。每次作答时如果做错都会得到相应的交互提示，直到作答次数用完。</p>
+                <p><strong>CBM模式</strong>CBM(Certainty-Based
+                    Mark)，基于确定性的打分，是一种具有一定风险的的反馈方式，学生在提交答案之前，选择做对本题的概率，获得相应的加分。其目的是促进学生对知识深层次的回忆和再认。 </p>
+                <p><strong>IDEA模式</strong>能提高学生积极性的反馈方式，学生在提交答案之前，先填解题思路、解题依据、个人想法等信息，经过教师评价后获得相应加分。其目的是促进学生的深层思考。 </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="help-exam-type" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">关闭</span>
+                </button>
+                <h4 class="modal-title">考试方式</h4>
+            </div>
+            <div class="modal-body">
+                <p><strong>即时小测</strong>采用每题提交即时反馈的方式，适合单元中的知识点测试。学生作答后可以得到即时反馈，促进知识的巩固。</p>
+                <p><strong>标准考试</strong>普通的严格控制考试，学生只有一次作答机会，并且不会得到反馈，考试结束后也不会立即知道自己的考试成绩。适合正式考试。</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

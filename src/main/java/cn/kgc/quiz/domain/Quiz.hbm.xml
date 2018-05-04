@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="cn.kgc.quiz.domain.Quiz" table="Q_QUIZ">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="20" scale="0"/>
+            <generator class="sequence">
+                <param name="sequence">SEQ_Q_QUIZ</param>
+            </generator>
+        </id>
+        <property name="courseId" type="java.lang.Long">
+            <column name="COURSE_ID" precision="20" scale="0"/>
+        </property>
+        <property name="name" type="java.lang.String">
+            <column name="NAME" length="3000"/>
+        </property>
+        <property name="intro" type="java.lang.String">
+            <column name="INTRO" length="3000"/>
+        </property>
+        <property name="timeOpen" type="java.util.Date">
+            <column name="TIMEOPEN"/>
+        </property>
+        <property name="timeClose" type="java.util.Date">
+            <column name="TIMECLOSE"/>
+        </property>
+        <property name="minutesAllowed" type="java.lang.Integer">
+            <column name="MINUTES_ALLOWED"/>
+        </property>
+        <property name="attemptsAllowed" type="java.lang.Integer">
+            <column name="ATTEMPTS_ALLOWED" precision="22" scale="0"/>
+        </property>
+        <property name="gradeMethod" type="java.lang.Integer">
+            <column name="GRADE_METHOD" precision="22" scale="0"/>
+        </property>
+        <property name="examType" type="java.lang.Integer">
+            <column name="EXAM_TYPE" precision="22" scale="0"/>
+        </property>
+        <property name="feedbackType" type="java.lang.Integer">
+            <column name="FEEDBACK_TYPE" precision="22" scale="0"/>
+        </property>
+        <property name="reviewAttempt" type="java.lang.Integer">
+            <column name="REVIEWATTEMPT" precision="22" scale="0"/>
+        </property>
+        <property name="reviewCorrectness" type="java.lang.Integer">
+            <column name="REVIEWCORRECTNESS" precision="22" scale="0"/>
+        </property>
+        <property name="reviewMarks" type="java.lang.Integer">
+            <column name="REVIEWMARKS" precision="22" scale="0"/>
+        </property>
+        <property name="reviewSpecialFeedback" type="java.lang.Integer">
+            <column name="REVIEWSPECIALFEEDBACK" precision="22" scale="0"/>
+        </property>
+        <property name="reviewGeneralFeedback" type="java.lang.Integer">
+            <column name="REVIEWGENERALFEEDBACK" precision="22" scale="0"/>
+        </property>
+        <property name="reviewRightAnswer" type="java.lang.Integer">
+            <column name="REVIEWRIGHTANSWER" precision="22" scale="0"/>
+        </property>
+        <property name="reviewScoreFeedback" type="java.lang.Integer">
+            <column name="REVIEWSCOREFEEDBACK" precision="22" scale="0"/>
+        </property>
+        <property name="sumGrades" type="java.lang.Double">
+            <column name="SUMGRADES" precision="22" scale="0"/>
+        </property>
+        <property name="lev1FeedbackText" type="java.lang.String">
+            <column name="LEVEL1_FEEDBACK_TEXT"/>
+        </property>
+        <property name="lev2FeedbackText" type="java.lang.String">
+            <column name="LEVEL2_FEEDBACK_TEXT"/>
+        </property>
+        <property name="lev3FeedbackText" type="java.lang.String">
+            <column name="LEVEL3_FEEDBACK_TEXT"/>
+        </property>
+        <property name="lev4FeedbackText" type="java.lang.String">
+            <column name="LEVEL4_FEEDBACK_TEXT"/>
+        </property>
+        <property name="lev5FeedbackText" type="java.lang.String">
+            <column name="LEVEL5_FEEDBACK_TEXT"/>
+        </property>
+        <property name="uuidFlag" type="java.lang.String">
+            <column name="UUID_FLAG"/>
+        </property>
+    </class>
+</hibernate-mapping>

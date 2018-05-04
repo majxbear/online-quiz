@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>用户管理</title>
+    <link rel="import" href="layout/basic_layout.html">
+</head>
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element"> <span>
+                            <img alt="image" class="img-circle" src="style/img/profile_small.jpg"/>
+                             </span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                                <span class="clear"> <span class="block m-t-xs"> <strong
+                                        class="font-bold">Beaut-zihan</strong>
+                             </span> <span class="text-muted text-xs block">超级管理员 <b class="caret"></b></span> </span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li class="logout" style="cursor: pointer">安全退出</li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="active">
+                    <a href="quiz_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">测试管理</span> <span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="quiz_list.html">测试管理</a></li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="question_list.html"><i class="fa fa fa-globe"></i> <span class="nav-label">题目管理</span><span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="question_list.html">题目管理</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="user_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">系统管理</span> <span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="user_list.html">用户管理</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row wrapper white-bg page-heading"></div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <form action="#" method="post">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="请输入用户名称" class="input-sm form-control"
+                                                   name="name">
+                                            <span class="input-group-btn">
+                                                    <input type="submit" class="btn btn-sm btn-success" value="搜索">
+                                                </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="i-checks" id="allChk"></th>
+                                        <th>用户名</th>
+                                        <th>姓名</th>
+                                        <th>邮件</th>
+                                        <th>删除</th>
+                                        <th>修改</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <div class="center">
+                                    <button class="btn btn-success" type="button"
+                                            onclick="window.location.href='user_add.html'">添加用户
+                                    </button>
+                                    <button class="btn btn-success" id="batchDelete" type="button" onclick="">删除
+                                    </button>
+                                </div>
+                                <form id="deleteForm" action="" method="get">
+                                    <input type="hidden" name="id" value="" id="quizIds">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $.ajax({
+            url: "/service/user",
+            method: "get",
+            dataType: "json",
+            headers: {
+                "username": getCookie("username"),
+                "token": getCookie("token"),
+                "type": getCookie("type")
+            },
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var answerHtml =
+                        '<tr data-attributes="' + data[i].id + '">' +
+                        '<td><input type="checkbox" class="i-checks" name="input[]"></td>' +
+                        '<td>' + data[i].username + '</td>' +
+                        '<td>' + data[i].realname + '</td>' +
+                        '<td>' + data[i].email + '</td>' +
+                        '<td style="cursor: pointer"><a href="user_modify.html?id=' + data[i].id + '"><img src="style/img/modify.png "/></a></td>'+
+                    '<td  style="cursor: pointer" onclick="delete_obj(' + data[i].id + ')"><img src="style/img/remove.png "/></td></tr>';
+                    $("tbody").append(answerHtml);
+                }
+            },
+            error: function (data) {
+                if (data.status == 403) {
+                    layer.alert("认证失败，请重新登录！", {icon: 5});
+                    window.location.href = "index.html";
+                }
+            }
+        });
+    });
+
+    $("#allChk").click(function () {
+        $("input[name='input[]']").prop("checked", this.checked);
+    });
+    var subChk = $("input[name='input[]']");
+    subChk.click(function () {
+        $("#allChk").prop("checked", subChk.length == subChk.filter(":checked").length ? true : false);
+    });
+
+    function delete_obj(id) {
+        if (confirm("您确定删除吗？ ")) {
+            $.ajax({
+                url: "/service/user/" + id,
+                method: "delete",
+                dataType: "json",
+                headers: {
+                    "username": getCookie("username"),
+                    "token": getCookie("token"),
+                    "type": getCookie("type")
+                },
+                success: function (data) {
+                    layer.alert("删除成功", {icon: 2});
+                    window.location.href = "user_list.html";
+                },
+                error: function (data) {
+                    if (data.status == 403) {
+                        layer.alert("认证失败，请重新登录！", {icon: 5});
+                        window.location.href = "index.html";
+                    } else if (data.status == 404) {
+                        layer.alert("用户不存在！", {icon: 5});
+                        window.location.href = "user_list.html";
+                    }
+                }
+            });
+        }
+    }
+
+    $("#batchDelete").click(function () {
+        var checked = $("input[name='input[]']:checked");
+        var checkedNum = checked.length;
+        if (checkedNum == 0) {
+            layer.alert("请选择至少一项！", {icon: 5});
+            return;
+        }
+        var ids = "";
+        checked.each(function () {
+            ids += ($(this).parents("tr").attr("data-attributes")) + ",";
+        });
+        delete_obj(ids);
+    });
+
+
+</script>
+</body>
+</html>
+

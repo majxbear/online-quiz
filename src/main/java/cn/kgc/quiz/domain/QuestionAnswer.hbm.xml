@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="cn.kgc.quiz.domain.QuestionAnswer" table="Q_QUESTION_ANSWER">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="20" scale="0"/>
+            <generator class="sequence">
+                <param name="sequence">SEQ_Q_QUESTION_ANSWER</param>
+            </generator>
+        </id>
+        <property name="questionId" type="java.lang.Long">
+            <column name="QUESTION_ID" precision="20" scale="0"/>
+        </property>
+        <many-to-one name="question" class="cn.kgc.quiz.domain.Question" insert="false"
+                     update="false" cascade="delete" lazy="false">
+            <column name="QUESTION_ID" precision="20" scale="0"/>
+        </many-to-one>
+        <property name="answer" type="java.lang.String">
+            <column name="ANSWER" length="3000"/>
+        </property>
+        <property name="grade" type="java.lang.Double">
+            <column name="GRADE" precision="22" scale="0"/>
+        </property>
+        <property name="feedback" type="java.lang.String">
+            <column name="FEEDBACK"/>
+        </property>
+        <property name="answerOrder" type="java.lang.Integer">
+            <column name="ANSWER_ORDER"/>
+        </property>
+        <property name="rightAnswer" type="java.lang.Integer">
+            <column name="IS_RIGHT_ANSWER"/>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="cn.kgc.quiz.domain.UserQuestionAttempt" table="Q_USER_QUESTION_ATTEMPT">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="20" scale="0"/>
+            <generator class="sequence">
+                <param name="sequence">SEQ_Q_USER_QUESTION_ATTEMPT</param>
+            </generator>
+        </id>
+        <property name="questionId" type="java.lang.Long">
+            <column name="QUESTION_ID" precision="20" scale="0"/>
+        </property>
+        <many-to-one name="question" class="cn.kgc.quiz.domain.Question" insert="false"
+                     update="false" lazy="false">
+            <column name="QUESTION_ID" precision="20" scale="0"/>
+        </many-to-one>
+
+        <property name="userQuizAttemptId" type="java.lang.Long">
+            <column name="QUIZ_ATTEMPT_ID" precision="20" scale="0"/>
+        </property>
+        <many-to-one name="userQuizAttempt" class="cn.kgc.quiz.domain.UserQuizAttempt"
+                     insert="false" update="false" lazy="false">
+            <column name="QUIZ_ATTEMPT_ID" precision="20" scale="0"/>
+        </many-to-one>
+        <property name="questionAttemptSeq" type="java.lang.Integer">
+            <column name="QUESTION_ATTEMPT_SEQ" precision="22" scale="0"/>
+        </property>
+        <property name="userAnswer" type="java.lang.String">
+            <column name="USER_ANSWER" length="3000"/>
+        </property>
+        <property name="hintId" type="java.lang.Long">
+            <column name="HINT_ID" precision="20" scale="0"/>
+        </property>
+        <many-to-one name="hint" class="cn.kgc.quiz.domain.Hint" update="false"
+                     insert="false" lazy="false">
+            <column name="HINT_ID" precision="20" scale="0"/>
+        </many-to-one>
+        <property name="grade" type="java.lang.Double">
+            <column name="GRADE" precision="22" scale="0"/>
+        </property>
+        <property name="resultFlag" type="java.lang.Integer">
+            <column name="RESULT_FLAG"/>
+        </property>
+        <property name="flagged" type="java.lang.Integer">
+            <column name="FLAGGED"/>
+        </property>
+        <property name="completed" type="java.lang.Integer">
+            <column name="COMPLETED"/>
+        </property>
+        <property name="attemptsRemained" type="java.lang.Integer">
+            <column name="ATTEMPTS_REMAINED"/>
+        </property>
+        <property name="timeStart" type="java.util.Date">
+            <column name="TIMESTART"/>
+        </property>
+        <property name="timeFinish" type="java.util.Date">
+            <column name="TIMEFINISH"/>
+        </property>
+        <property name="timeSubmit" type="java.util.Date">
+            <column name="TIMESUBMIT"/>
+        </property>
+        <property name="uuidFlag" type="java.lang.String">
+            <column name="UUID_FLAG"/>
+        </property>
+        <property name="certainty" type="java.lang.Integer">
+            <column name="CENTAINTY"/>
+        </property>
+        <property name="userIdea" type="java.lang.String">
+            <column name="USER_IDEA"/>
+        </property>
+        <property name="awardRate" type="java.lang.Double">
+            <column name="AWARD_RATE"/>
+        </property>
+        <property name="awardPoint" type="java.lang.Double">
+            <column name="AWARD_POINT"/>
+        </property>
+        <property name="teacherFeedback" type="java.lang.String">
+            <column name="TEACHER_FEEDBACK"/>
+        </property>
+        <property name="replyStatus" type="java.lang.Integer">
+            <column name="REPLY_STATUS"/>
+        </property>
+
+    </class>
+</hibernate-mapping>

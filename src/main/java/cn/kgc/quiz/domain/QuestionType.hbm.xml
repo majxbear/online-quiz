@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="cn.kgc.quiz.domain.QuestionType" table="Q_QUESTION_TYPE">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="20" scale="0"/>
+            <generator class="sequence">
+                <param name="sequence">SEQ_Q_QUESTION_TYPE</param>
+            </generator>
+        </id>
+        <property name="codeNumber" type="java.lang.String">
+            <column name="CODE_NUMBER"/>
+        </property>
+        <property name="typeName" type="java.lang.String">
+            <column name="TYPE_NAME"/>
+        </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="STATUS"/>
+        </property>
+        <property name="intro" type="java.lang.String">
+            <column name="INTRO"/>
+        </property>
+        <property name="whetherDefault" type="java.lang.Integer">
+            <column name="IS_DEFAULT"/>
+        </property>
+        <property name="shortName" type="java.lang.String">
+            <column name="SHORT_NAME"/>
+        </property>
+    </class>
+</hibernate-mapping>

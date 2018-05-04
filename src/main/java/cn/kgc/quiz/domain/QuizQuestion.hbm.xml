@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="cn.kgc.quiz.domain.QuizQuestion" table="Q_QUIZ_QUESTION">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="20" scale="0"/>
+            <generator class="sequence">
+                <param name="sequence">SEQ_Q_QUIZ_QUESTION</param>
+            </generator>
+        </id>
+        <property name="questionId" type="java.lang.Long">
+            <column name="QUESTION_ID" precision="20" scale="0"/>
+        </property>
+        <many-to-one name="question" class="cn.kgc.quiz.domain.Question" lazy="false"
+                     insert="false" update="false">
+            <column name="QUESTION_ID" precision="20" scale="0"/>
+        </many-to-one>
+        <property name="quizId" type="java.lang.Long">
+            <column name="QUIZ_ID" precision="20" scale="0"/>
+        </property>
+        <many-to-one name="quiz" class="cn.kgc.quiz.domain.Quiz" insert="false"
+                     update="false" lazy="false">
+            <column name="QUIZ_ID" precision="20" scale="0"/>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

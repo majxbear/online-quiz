@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="cn.kgc.quiz.domain.UserQuizAttempt" table="Q_USER_QUIZ_ATTEMPT">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="20" scale="0"/>
+            <generator class="sequence">
+                <param name="sequence">SEQ_Q_USER_QUIZ_ATTEMPT</param>
+            </generator>
+        </id>
+        <property name="quizId" type="java.lang.Long">
+            <column name="QUIZ_ID" precision="20" scale="0"/>
+        </property>
+        <many-to-one name="quiz" class="cn.kgc.quiz.domain.Quiz" insert="false"
+                     update="false" lazy="false">
+            <column name="QUIZ_ID" precision="20" scale="0"/>
+        </many-to-one>
+        <property name="quizUserId" type="java.lang.Long">
+            <column name="USERID" precision="20" scale="0"/>
+        </property>
+        <many-to-one name="sysUser" class="cn.kgc.quiz.domain.QuizUser" insert="false"
+                     update="false" lazy="false">
+            <column name="USERID" precision="20" scale="0"/>
+        </many-to-one>
+        <property name="quizAttemptSeq" type="java.lang.Integer">
+            <column name="QUIZ_ATTEMPT_SEQ" precision="22" scale="0"/>
+        </property>
+        <property name="previewTimes" type="java.lang.Integer">
+            <column name="PREVIEW_TIMES" precision="22" scale="0"/>
+        </property>
+        <property name="state" type="java.lang.Integer">
+            <column name="STATE" precision="22" scale="0"/>
+        </property>
+        <property name="timeStart" type="java.util.Date">
+            <column name="TIMESTART"/>
+        </property>
+        <property name="timeFinish" type="java.util.Date">
+            <column name="TIMEFINISH"/>
+        </property>
+        <property name="timeModified" type="java.util.Date">
+            <column name="TIMEMODIFIED"/>
+        </property>
+        <property name="sumGrades" type="java.lang.Double">
+            <column name="SUMGRADES" precision="22" scale="0"/>
+        </property>
+        <property name="gradeFeedback" type="java.lang.String">
+            <column name="GRADE_FEEDBACK"/>
+        </property>
+        <property name="currentExamType" type="java.lang.Integer">
+            <column name="CURRENT_EXAM_TYPE"/>
+        </property>
+        <property name="currentFeedbackType" type="java.lang.Integer">
+            <column name="CURRENT_FEEDBACK_TYPE"/>
+        </property>
+        <property name="attemptsRemained" type="java.lang.Integer">
+            <column name="ATTEMPTS_REMAINED"/>
+        </property>
+        <property name="uuidFlag" type="java.lang.String">
+            <column name="UUID_FLAG"/>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,16 @@
+
+运行sqlplus，使用sys用户登录。
+1.创建表空间
+create tablespace quiz
+    datafile 'D:\software\oracle\data\quiz.dbf'
+    size 1024M;
+2.创建用户
+create user quiz identified by quiz default tablespace quiz;
+3.赋予权限
+grant dba to quiz;
+
+
+删除表空间
+ drop tablespace quiz including contents;
+删除用户
+drop user quiz cascade;

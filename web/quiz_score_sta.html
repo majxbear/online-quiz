@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试管理</title>
+    <link rel="import" href="layout/basic_layout.html">
+    <script src="style/js/jquery.base64.js"></script>
+    <script src="style/js/tableExport.js"></script>
+    <script src="style/js/highcharts.js"></script>
+</head>
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element"> <span>
+                            <img alt="image" class="img-circle" src="style/img/profile_small.jpg" />
+                             </span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                                <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">Beaut-zihan</strong>
+                             </span> <span class="text-muted text-xs block">超级管理员 <b class="caret"></b></span> </span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li class="logout" style="cursor: pointer">安全退出</li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="active">
+                    <a href="quiz_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">测试管理</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="quiz_list.html">测试管理</a></li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="question_list.html"><i class="fa fa fa-globe"></i> <span class="nav-label">题目管理</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="question_list.html">题目管理</a> </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="user_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">系统管理</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="user_list.html">用户管理</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row wrapper white-bg page-heading"></div>
+        <div class="quiz-name">${quiz.name}</div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5><strong>参与情况统计</strong></h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div id="finish-container" style="width: 400px; height: 300px; margin: 0 auto;"></div>
+                            </div>
+                            <div class="center">
+                                <button style="margin-top:10px" class="btn btn-white" type="button" onclick="listStudents(${quiz.id})" data-toggle="modal" data-target="#stu-table">查看未参与学生</button>
+                            </div>
+                        </div>
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5><strong>成绩分布</strong></h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div id="score-container" style="width: 800px; height: 400px; margin: 0 auto;"></div>
+                            </div>
+                        </div>
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5><strong>题目错误率</strong></h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>题目序号</th>
+                                            <th>题目名称</th>
+                                            <th>作答次数</th>
+                                            <th>做错次数</th>
+                                            <th>题目错误率</th>
+                                            <th>详细查看</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>${index.count}</td>
+                                                <td style="width:100px"><a href="questionPreview.do?id=${display.id}" target="_blank">${display.name}</a></td>
+                                                <td>${display.answeredNum}</td>
+                                                <td>${display.wrongNum}</td>
+                                                <td>${display.wrongRate}</td>
+                                                <td><a onclick="draw_chart(this)" data-attributes="questionResultSta.do?questionId=${display.id}&quizId=${quiz.id}" data-toggle="modal" data-target="#sta-chart"><img src="style/img/chart.png"/></a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function listStudents(quizId){
+        $.ajax({
+            type: 'get',
+            dataType:'json',
+            url: 'getQuizUnfinishedStu.do?quizId='+quizId,
+            success:function(data){
+                $("#stu-body").html("");
+                var email = "";
+                $.each(data, function(i,item){
+                    email = item.email;
+                    if(typeof(email)=="undefined")
+                        email = "";
+                    $("#stu-body").append("<tr><td>"+item.username+"</td>" +
+                            "<td>"+item.realName+"</td>" +
+                            "<td>"+email+"</td>" +
+                            "<td><a><img src='<c:url value='style/img/notice.png'/> '/></a></td></tr>");
+                });
+            },
+            error:function(){
+                layer.msg("数据链接失败，请稍后再试",5);
+            }
+        })
+    }
+    function draw_chart(obj){
+        var url = $(obj).attr("data-attributes");
+        var chart = $('#container').highcharts();
+        $.ajax({
+            type: 'get',
+            dataType:'json',
+            url: url,
+            success:function(data){
+                data = eval(data);
+                chart.setTitle({text:''+data.title});
+                chart.series[0].setData(data.answeredNum);
+                chart.xAxis[0].setCategories(data.categories);
+                chart.xAxis[0].update({labels:{overflow:'justify',
+                    formatter: function () {
+                        if(this.value.length<10)
+                            return this.value;
+                        else return (this.value).toString().substring(0,9)+'...';
+                    }}});
+            },
+            error:function(){
+                layer.msg("数据链接失败，请稍后再试",5);
+            }
+        })
+    }
+    $(function () {
+        var options={
+            title: {text: ''},
+            xAxis: {categories: []},
+            yAxis: {allowDecimals:false,min: 0,title: {text: ''}},
+            series: [{type: 'column',name:'',data:[]}],
+            credits:{enabled:false},
+            legend:{enabled:false},
+            plotOptions:{column:{colorByPoint:true},series: {dataLabels:{enabled:true,
+                formatter:function () {
+                    if(this.y!=0)
+                        return this.y+'人';
+                    else return '';
+                }}}},
+            tooltip:{pointFormat:'<span style="color:{series.color}"></span><b>{point.y}</b><br/>'}
+        },scoreContainer = $('#score-container'),finishContainer=$('#finish-container');
+        finishContainer.highcharts({
+            chart: {type: 'pie'},
+            credits:{enabled:false},
+            tooltip:{enabled:false},
+            title: {text: html_decode('${quiz.name}')+''},
+            plotOptions: {pie:{allowPointSelect: true,cursor: 'pointer',
+                dataLabels: {enabled: true,format: '<b>{point.name}</b>: {point.y} 人'}}
+            },
+            series: [{
+                colorByPoint: true,
+                data: [{name: '已参与',y: ${finishedNum}}, {name: '未参与',y: ${unfinishedNum},sliced: true,selected: true}]
+            }]
+        });
+
+        scoreContainer.highcharts(options);
+        var scoreChart = scoreContainer.highcharts();
+        scoreChart.setTitle({text:html_decode('${quiz.name}')+''});
+        scoreChart.series[0].setData(${partData});
+        scoreChart.xAxis[0].setCategories(['0-20%','20-40%','40-60%','60-80%','80-100%']);
+
+        $('#container').highcharts(options);
+    })
+</script>
+<div class="modal inmodal" id="stu-table" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog choose-questions">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">关闭</span>
+                </button>
+                <h4 class="modal-title">未参与学生 </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>学号 </th>
+                                            <th>姓名</th>
+                                            <th>邮箱</th>
+                                            <th>提醒</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="stu-body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" style="width: 900px; height: 700px; margin: 0 auto" id="sta-chart" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content animated bounceInRight">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only"></span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="container" style="width: 800px; height: 600px; margin: 0 auto;"></div>
+        </div>
+    </div>
+</div>
+</body>

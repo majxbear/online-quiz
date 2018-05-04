@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试管理</title>
+    <link rel="import" href="layout/basic_layout.html">
+    <script src="style/js/jquery.base64.js"></script>
+    <script src="style/js/tableExport.js"></script>
+</head>
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element"> <span>
+                            <img alt="image" class="img-circle" src="style/img/profile_small.jpg" />
+                             </span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                                <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">Beaut-zihan</strong>
+                             </span> <span class="text-muted text-xs block">超级管理员 <b class="caret"></b></span> </span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li class="logout" style="cursor: pointer">安全退出</li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="active">
+                    <a href="quiz_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">测试管理</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="quiz_list.html">测试管理</a></li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="question_list.html"><i class="fa fa fa-globe"></i> <span class="nav-label">题目管理</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="question_list.html">题目管理</a> </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="user_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">系统管理</span> <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="user_list.html">用户管理</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div class="form-group">
+                        <h1><a href="quizAdmin.do?courseId=${courseId}"><span class="fa fa-home"></span></a>测试结果</h1>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="row wrapper white-bg page-heading"></div>
+        <div class="quiz-name">${quiz.name}</div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div class="ibox-content">
+                            <h4>得分低于</h4><input type="text" name="grade" value="1" class="form-control"/>
+                            <h4>测试用时少于（分钟）</h4><input type="text" name="minute" value="2" class="form-control"/>
+                            <div class="center">
+                                <button style="margin-top:10px" class="btn btn-white" type="button" onclick="window.location.href='quizResultReview.do?courseId=${courseId}&quizId=${quiz.id}'" >查看全部</button>
+                                <button style="margin-top:10px" class="btn btn-white" type="button" onclick="searchResult(${quiz.id})" >搜索</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-12 center question-manage-alert">
+                            <span>目前还没有学生参加测试</span>
+                        </div>
+
+                            <div class="ibox-content">
+                                <div class="table-responsive">
+                                    <table id="score-table" class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>序号</th>
+                                            <th>组别</th>
+                                            <th>姓名</th>
+                                            <th>学号 </th>
+                                            <th>分数</th>
+                                            <th>状态</th>
+                                            <th>用时</th>
+                                            <th>开始时间</th>
+                                            <th>完成时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <!--<c:forEach var="attempt" items="${attemptList}" varStatus="index">-->
+                                            <tr>
+                                                <td>${index.count}</td>
+                                                <td>${attempt.group}</td>
+                                                <td>${attempt.realName}</td>
+                                                <td>${attempt.username}</td>
+                                                <td>${attempt.sumGrades}</td>
+                                                <!--1为完成 0为未完成-->
+                                                    <td>已完成 </td>
+                                                <td>${attempt.timeUsed}</td>
+                                                <td>${attempt.timeStart}</td>
+                                                <td>${attempt.timeFinish}</td>
+                                                <td>
+                                                    <a target="_blank" href="attemptReview.do?attemptId=${attempt.id}">回顾</a>
+                                                    <a href="attemptDelete.do?attemptId=${attempt.id}&quizId=${quiz.id}&courseId=${courseId}">删除</a>
+                                                </td>
+                                            </tr>
+                                        <!--</c:forEach>-->
+                                        </tbody>
+                                    </table>
+                                </div>
+                              </div>
+                        <div class="col-sm-12 center">
+                            <button class="btn btn-success" type="button" onclick="$('#score-table').tableExport({type: 'excel', escape: 'false'});">导出成Excel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function searchResult(quizId){
+        var grade =$("input[name='grade']").val(),minute=$("input[name='minute']").val();
+        if(isNaN(grade) || isNaN(minute))  {
+            layer.alert("请输入有效数字",{icon:5});
+            return;
+        }
+        window.location.href = "quizResultReview.do?courseId=${courseId}&quizId="+quizId+"&grade="+grade+"&minute="+minute;
+    }
+</script>
+</body>

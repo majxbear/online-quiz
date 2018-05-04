@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>测试回顾</title>
+    <link rel="import" href="layout/quiz_layout.html">
+    <script  charset="GBK" src="style/js/quiz_review.js"></script>
+</head>
+<body>
+<div id="wrapper">
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div class="form-group">
+                        <h1 class="quizName"></h1>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="row wrapper white-bg page-heading"></div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div id='quiz-container'></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    $(function () {
+        $.ajax({
+            url: "/service/attempt/review/"+getQueryString("id"),
+            method: "get",
+            dataType: "json",
+            headers: {
+                "username": getCookie("username"),
+                "token": getCookie("token"),
+                "type": getCookie("type")
+            },
+            success: function (attempt) {
+                $(".quizName").html(attempt.quizName);
+                $('#quiz-container').jQuiz({
+                    quizId:attempt.quizId,
+                    feedbackType:attempt.feedbackType,
+                    userSumGrades:attempt.userSumGrades,
+                    quizSumGrades:attempt.quizSumGrades,
+                    gradeFeedback:attempt.gradeFeedback,
+                    attemptId:attempt.attemptId,
+                    userId:attempt.userId,
+                    questions: attempt.questions,
+                    intro:attempt.intro,
+                    quizName:attempt.quizName
+                });
+            },
+            error: function (data) {
+                if (data.status == 403) {
+                    layer.alert("认证失败，请重新登录！", {icon: 5});
+                    window.location.href = "index.html";
+                }
+            }
+        });
+    });
+</script>
+
+

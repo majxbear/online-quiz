@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试管理</title>
+    <link rel="import" href="layout/basic_layout.html">
+</head>
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element"> <span>
+                            <img alt="image" class="img-circle" src="style/img/profile_small.jpg"/>
+                             </span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
+                                <span class="clear"> <span class="block m-t-xs"> <strong
+                                        class="font-bold">Beaut-zihan</strong>
+                             </span> <span class="text-muted text-xs block">超级管理员 <b class="caret"></b></span> </span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li class="logout" style="cursor: pointer">安全退出</li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="active">
+                    <a href="quiz_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">测试管理</span> <span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="quiz_list.html">测试管理</a></li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a href="question_list.html"><i class="fa fa fa-globe"></i> <span class="nav-label">题目管理</span><span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="question_list.html">题目管理</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="user_list.html"><i class="fa fa-th-large"></i> <span class="nav-label">系统管理</span> <span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li><a href="user_list.html">用户管理</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div class="form-group">
+                        <h1>添加测试</h1>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="row wrapper white-bg page-heading"></div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="#" class="form-horizontal">
+                        <input type="hidden" name="courseId" value="${courseId}"/>
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>概要信息</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="form-group has-error">
+                                    <label class="col-sm-2 control-label">测试名称</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="name" class="form-control">
+                                        <span class="help-block m-b-none">不能为空</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">测试说明</label>
+                                    <div class="col-sm-10">
+                                        <textarea rows="4" cols="70" name="intro"></textarea>
+                                        <span class="help-block m-b-none">测试说明用来提示学生在考试中应该注意的问题</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>答题控制</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">考试方式<span class="help" title="点我获取帮助"
+                                                                                    data-toggle="modal"
+                                                                                    data-target="#help-exam-type"><img
+                                            src="style/img/help.svg"/></span></label>
+                                    <div class="col-sm-4">
+                                        <select name="examType" class="form-control m-b">
+                                            <option value="0">即时小测</option>
+                                            <option value="1">正式考试</option>
+                                        </select>
+
+                                        <span class="help-block m-b-none">此选项在发布测试时不能改变，请选择合适的考试方式。</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">开放时间</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="timeOpen" class="form-control" value=""
+                                               onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">关闭时间</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" id="timeClose" class="form-control" value=""
+                                               onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">允许作答时间</label>
+                                    <div class="col-sm-4">
+                                        <select name="minutesAllowed" class="form-control m-b">
+                                            <option value="-1">不限次数</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="40">40</option>
+                                            <option value="50">50</option>
+                                            <option value="60">60</option>
+                                            <option value="90">90</option>
+                                            <option value="120">120</option>
+                                            <option value="150">150</option>
+                                            <option value="180">180</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">允许作答次数</label>
+                                    <div class="col-sm-4">
+                                        <select name="attemptsAllowed" class="form-control m-b">
+                                            <option value="-1">不限次数</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>反馈方式和内容 </h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">反馈模式<span class="help" title="点我获取帮助"
+                                                                                    data-toggle="modal"
+                                                                                    data-target="#help-feedback-mode"><img
+                                            src="style/img/help.svg"/></span></label>
+                                    <div class="col-sm-4">
+                                        <select name="feedbackType" class="form-control m-b">
+                                            <option value="0">无限次数尝试反馈方式</option>
+                                            <option value="1">有限次数交互尝试反馈方式</option>
+                                            <option value="2">CBM反馈方式</option>
+                                            <option value="3">IDEA反馈方式</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group feedback-content">
+                                    <label class="col-sm-2 control-label">反馈内容<span class="help" title="点我获取帮助"
+                                                                                    data-toggle="modal"
+                                                                                    data-target="#help-feedback-content"><img
+                                            src="style/img/help.svg"/></span></label>
+                                    <div class="col-sm-4">
+                                        <div class="checkbox i-checks">
+                                            <label><input type="checkbox" name="reviewCorrectness">正误标记</label>
+                                        </div>
+                                        <div class="checkbox i-checks">
+                                            <label><input type="checkbox" name="reviewMarks">本次得分</label>
+                                        </div>
+                                        <div class="checkbox i-checks">
+                                            <label><input type="checkbox" name="reviewRightAnswer">参考答案</label>
+                                        </div>
+                                        <div class="checkbox i-checks">
+                                            <label><input type="checkbox" name="reviewSpecialFeedback">选项反馈</label>
+                                        </div>
+                                        <div class="checkbox i-checks">
+                                            <label><input type="checkbox" name="reviewSpecialFeedback">题目反馈</label>
+                                        </div>
+                                        <div class="checkbox i-checks">
+                                            <label><input type="checkbox" name="reviewScoreFeedback">测试反馈</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>测试反馈</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"></label>
+                                    <label class="col-sm-8 left"><strong>得分反馈</strong>根据测试得分，为不同分数段的学生提供不同的鼓励、鞭策等信息，推荐不同的学习材料。</label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">90%~100%</label>
+                                    <div class="col-sm-10">
+                                        <textarea rows="4" cols="70" name="lev1FeedbackText"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">80%~90%</label>
+                                    <div class="col-sm-10">
+                                        <textarea rows="4" cols="70" name="lev2FeedbackText"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">70%~80%</label>
+                                    <div class="col-sm-10">
+                                        <textarea rows="4" cols="70" name="lev3FeedbackText"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">60%~70%</label>
+                                    <div class="col-sm-10">
+                                        <textarea rows="4" cols="70" name="lev4FeedbackText"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">0%~60%</label>
+                                    <div class="col-sm-10">
+                                        <textarea rows="4" cols="70" name="lev5FeedbackText"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12 center">
+                                <button class="btn btn-success" type="button" onclick="saveQuiz()">保存</button>
+                                <button class="btn btn-white" type="button" onclick="window.location.href='quiz_list.html'">取消</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="help-feedback-mode" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only"></span>
+                </button>
+                <h4 class="modal-title">反馈模式</h4>
+            </div>
+            <div class="modal-body">
+                <p><strong>自由模式</strong>无条件的反馈方式，学生作答完题目后还可以无限次地重新作答该题目。</p>
+                <p><strong>交互尝试模式</strong>有条件的反馈方式，学生作答完题目后还可以有限次地重新作答该题目。每次作答时如果做错都会得到相应的交互提示，直到作答次数用完。</p>
+                <p><strong>CBM模式</strong>CBM(Certainty-Based
+                    Mark)，基于确定性的打分，是一种具有一定风险的的反馈方式，学生在提交答案之前，选择做对本题的概率，获得相应的加分。其目的是促进学生对知识深层次的回忆和再认。 </p>
+                <p><strong>IDEA模式</strong>能提高学生积极性的反馈方式，学生在提交答案之前，先填解题思路、解题依据、个人想法等信息，经过教师评价后获得相应加分。其目的是促进学生的深层思考。 </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="help-exam-type" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">关闭</span>
+                </button>
+                <h4 class="modal-title">考试方式</h4>
+            </div>
+            <div class="modal-body">
+                <p><strong>即时小测</strong>采用每题提交即时反馈的方式，适合单元中的知识点测试。学生作答后可以得到即时反馈，促进知识的巩固。</p>
+                <p><strong>标准考试</strong>普通的严格控制考试，学生只有一次作答机会，并且不会得到反馈，考试结束后也不会立即知道自己的考试成绩。适合正式考试。</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function saveQuiz() {
+        var name = $("input[name='name']").val(),
+            intro = $("textarea[name='intro']").val(),
+            timeOpen = $("#timeOpen").val(),
+            timeClose = $("#timeClose").val(),
+            feedbackType = $("select[name='feedbackType']").val(),
+            examType = $("select[name='examType']").val(),
+            minutesAllowed = $("select[name='minutesAllowed']").val(),
+            attemptsAllowed = $("select[name='attemptsAllowed']").val(),
+            lev1FeedbackText = $("textarea[name='lev1FeedbackText']").val(),
+            lev2FeedbackText = $("textarea[name='lev2FeedbackText']").val(),
+            lev3FeedbackText = $("textarea[name='lev3FeedbackText']").val(),
+            lev4FeedbackText = $("textarea[name='lev4FeedbackText']").val(),
+            lev5FeedbackText = $("textarea[name='lev5FeedbackText']").val();
+        if (name == "") {
+            layer.alert("名称不能为空", {icon: 5});
+            return false;
+        }
+
+        var quiz = {
+            "name": name, "intro": intro, "timeOpen": timeOpen, "timeClose": timeClose,
+            "feedbackType": feedbackType, "examType": examType, "minutesAllowed": minutesAllowed,
+            "attemptsAllowed": attemptsAllowed, "lev1FeedbackText": lev1FeedbackText,
+            "lev2FeedbackText": lev2FeedbackText, "lev3FeedbackText": lev3FeedbackText,
+             "lev4FeedbackText": lev4FeedbackText,
+            "lev5FeedbackText": lev5FeedbackText
+        };
+        $.ajax({
+            url: "/service/quiz",
+            method: "put",
+            dataType: "json",
+            data:JSON.stringify(quiz),
+            headers: {
+                "username": getCookie("username"),
+                "token": getCookie("token"),
+                "type": getCookie("type")
+            },
+            success: function (data) {
+                layer.load("添加成功", 2);
+                window.location.href = "quiz_list.html";
+            },
+            error: function (data) {
+                if (data.status == 403) {
+                    layer.alert("认证失败，请重新登录！",{icon:5});
+                    window.location.href = "index.html";
+                }
+            }
+        });
+
+    }
+    $(function () {
+        $(".feedback-content :checkbox").attr("checked", "true");
+        $("select[name='examType']").change(function () {
+            if ($(this).val() == 1) {
+                $("select[name='feedbackType']").attr("disabled", "true");
+                $("input[type='checkbox']").attr("disabled", "true");
+                $("select[name='attemptsAllowed']").val(1);
+            }
+            if ($(this).val() == 0) {
+                $("select[name='feedbackType']").removeAttr("disabled");
+                $("input[type='checkbox']").removeAttr("disabled");
+            }
+        })
+
+    })
+</script>
+</body>
